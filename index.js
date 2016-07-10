@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 
-var Lisplate = require('../../lisplate');
+var Lisplate = require('lisplate');
 var engine = new Lisplate();
 
 function tryLoadingStrings(stringsPath, langs, done) {
