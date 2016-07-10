@@ -1,0 +1,24 @@
+{
+  "name": "hapi-lisplate",
+  "version": "0.1.0",
+  "description": "LisplateJS bindings for Hapi render",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lisplate/hapi-lisplate.git"
+  },
+  "author": "Matthew Hall <mdhall@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lisplate/hapi-lisplate/issues"
+  },
+  "homepage": "https://github.com/lisplate/hapi-lisplate",
+  "peerDependencies": {
+    "hapi": "^13.5.0",
+    "lisplate": "~0.4.1",
+    "vision": "^4.1.0"
+  }
+}

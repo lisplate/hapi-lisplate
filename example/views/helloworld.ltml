@@ -1,0 +1,10 @@
+<html>
+  <head>
+    <title>{strings::hellotitle}</title>
+  </head>
+  <body>
+    <h1>{strings::helloworld}</h1>
+    <h2>{strings::subheading}</h2>
+    <a href="/page">this page</a>
+  </body>
+</html>

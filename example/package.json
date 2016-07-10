@@ -1,0 +1,13 @@
+{
+  "name": "hapi-lisplate-example",
+  "version": "0.1.0",
+  "description": "Simple example using hapi-lisplate",
+  "main": "index.js",
+  "author": "Matthew Hall <mdhall@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "hapi": "^13.5.0",
+    "lisplate": "~0.4.1",
+    "vision": "^4.1.0"
+  }
+}

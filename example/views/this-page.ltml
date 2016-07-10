@@ -1,0 +1,9 @@
+<html>
+  <head>
+    <title>{viewmodel::pagetitle}</title>
+  </head>
+  <body>
+    <h1>{viewmodel::heading}</h1>
+    <h2>{data::subheading}</h2>
+  </body>
+</html>
