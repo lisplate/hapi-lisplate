@@ -1,4 +1,4 @@
-# express-lisplate
+# hapi-lisplate
 LisplateJS bindings for HapiJS
 
 ## Installation
