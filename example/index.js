@@ -7,7 +7,7 @@ server.register(require('vision'), function(err) {
     throw err;
   }
 
-  var ltmlEngine = require('hapi-lisplate')({
+  var ltmlEngine = require('../')({
     viewModelDirectory: 'viewmodels',
     stringsDirectory: 'strings'
   });
@@ -15,7 +15,8 @@ server.register(require('vision'), function(err) {
   server.views({
     engines: { ltml: ltmlEngine },
     relativeTo: __dirname,
-    path: 'views'
+    path: 'views',
+    context: require('../').localizationContext
   });
 });
 

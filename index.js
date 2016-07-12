@@ -2,7 +2,6 @@ var fs = require('fs');
 var path = require('path');
 
 var Lisplate = require('lisplate');
-var engine = new Lisplate();
 
 function tryLoadingStrings(stringsPath, langs, done) {
   var filepath = stringsPath;
@@ -25,7 +24,7 @@ function tryLoadingStrings(stringsPath, langs, done) {
   });
 }
 
-function setupLoaders(options) {
+function setupLoaders(engine, options) {
   var viewModelLoader = null;
   var stringsLoader = null;
 
@@ -61,7 +60,7 @@ function setupLoaders(options) {
           options.stringsDirectory,
           templatePath
         );
-        tryLoadingStrings(filepath, null, callback);
+        tryLoadingStrings(filepath, options.langs, callback);
       };
     }
   }
@@ -71,14 +70,12 @@ function setupLoaders(options) {
 }
 
 module.exports = function makeViewEngine(engineOptions) {
+  var relativeTo = '';
+
   return {
     module: {
       prepare: function(config, done) {
-        setupLoaders({
-          viewModelDirectory: engineOptions.viewModelDirectory,
-          stringsDirectory: engineOptions.stringsDirectory,
-          relativeTo: config.relativeTo
-        });
+        relativeTo = config.relativeTo;
         done();
       },
 
@@ -101,16 +98,25 @@ module.exports = function makeViewEngine(engineOptions) {
           return;
         }
 
-        engine
-          .loadTemplate({templateName: templateName, renderFactory: factory})
-          .then(function(fn) {
-            callback(null, function(context, renderOptions, done) {
-              engine.renderTemplate(templateName, context, done);
-            });
-          })
-          .catch(function(err) {
-            callback(err);
+        callback(null, function(context, renderOptions, done) {
+          var engine = new Lisplate();
+
+          setupLoaders(engine, {
+            viewModelDirectory: engineOptions.viewModelDirectory,
+            stringsDirectory: engineOptions.stringsDirectory,
+            langs: context.$_langs,
+            relativeTo: relativeTo
           });
+
+          engine
+            .loadTemplate({templateName: templateName, renderFactory: factory})
+            .then(function(fn) {
+              engine.renderTemplate(templateName, context, done);
+            })
+            .catch(function(err) {
+              done(err);
+            });
+        });
       },
 
       registerHelper: function(name, helper) {
@@ -122,31 +128,36 @@ module.exports = function makeViewEngine(engineOptions) {
   };
 };
 
-// module.exports.localizationInit = function(req, res, next) {
-//   var languages = req.headers['accept-language'];
-//   if (languages) {
-//     languages = languages.split(',');
+module.exports.localizationContext = function(request) {
+  if (!request) {
+    return {};
+  }
 
-//     var scores = {};
-//     languages = languages.map(function(langInfo) {
-//       var parts = langInfo.split(';q=');
-//       var lang = parts[0];
-//       if (parts.length === 2) {
-//         scores[lang] = parseFloat(parts[1]) || 0.0;
-//       } else {
-//         scores[lang] = 1.0;
-//       }
+  var languages = request.headers['accept-language'];
 
-//       return lang;
-//     }).filter(function(lang) {
-//       return scores[lang] > 0.0;
-//     }).sort(function(a, b) {
-//       // sorted smallest first, to use pop from array
-//       return scores[a] < scores[b];
-//     });
-//   }
+  if (languages) {
+    languages = languages.split(',');
 
-//   req.langs = languages;
-//   res.locals.$_langs = languages;
-//   next();
-// };
+    var scores = {};
+    languages = languages.map(function(langInfo) {
+      var parts = langInfo.split(';q=');
+      var lang = parts[0];
+      if (parts.length === 2) {
+        scores[lang] = parseFloat(parts[1]) || 0.0;
+      } else {
+        scores[lang] = 1.0;
+      }
+
+      return lang;
+    }).filter(function(lang) {
+      return scores[lang] > 0.0;
+    }).sort(function(a, b) {
+      // sorted smallest first, to use pop from array
+      return scores[a] < scores[b];
+    });
+  }
+
+  return {
+    $_langs: languages
+  }
+};

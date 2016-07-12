@@ -1,6 +1,6 @@
 {
   "name": "hapi-lisplate",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "LisplateJS bindings for Hapi render",
   "main": "index.js",
   "directories": {
