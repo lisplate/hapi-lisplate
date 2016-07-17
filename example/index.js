@@ -1,6 +1,7 @@
 var Hapi = require('hapi');
+var port = process.env.PORT  || 3000;
 var server = new Hapi.Server();
-server.connection({ port: 3000 });
+server.connection({ port: port });
 
 server.register(require('vision'), function(err) {
   if (err) {

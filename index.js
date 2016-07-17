@@ -54,13 +54,13 @@ function setupLoaders(engine, options) {
     if (typeof options.stringsDirectory === 'function') {
       stringsLoader = options.stringsDirectory;
     } else {
-      stringsLoader = function(templatePath, callback) {
+      stringsLoader = function(templatePath, renderContext, callback) {
         var filepath = path.resolve(
           options.relativeTo,
           options.stringsDirectory,
           templatePath
         );
-        tryLoadingStrings(filepath, options.langs, callback);
+        tryLoadingStrings(filepath, renderContext.languages, callback);
       };
     }
   }
@@ -104,14 +104,13 @@ module.exports = function makeViewEngine(engineOptions) {
           setupLoaders(engine, {
             viewModelDirectory: engineOptions.viewModelDirectory,
             stringsDirectory: engineOptions.stringsDirectory,
-            langs: context.$_langs,
             relativeTo: relativeTo
           });
 
           engine
             .loadTemplate({templateName: templateName, renderFactory: factory})
             .then(function(fn) {
-              engine.renderTemplate(templateName, context, done);
+              engine.renderTemplate(templateName, context, context.$_renderContext, done);
             })
             .catch(function(err) {
               done(err);
@@ -158,6 +157,8 @@ module.exports.localizationContext = function(request) {
   }
 
   return {
-    $_langs: languages
+    $_renderContext: {
+      languages: languages
+    }
   }
 };
