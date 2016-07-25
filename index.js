@@ -13,7 +13,7 @@ function tryLoadingStrings(stringsPath, langs, done) {
   fs.readFile(filepath, 'utf-8', function(err, json) {
     if (err) {
       if (langs) {
-        tryLoadingStrings(stringsPath, langs, done);
+        tryLoadingStrings(stringsPath, langs.length ? langs : null, done);
       } else {
         done();
       }
@@ -60,7 +60,9 @@ function setupLoaders(engine, options) {
           options.stringsDirectory,
           templatePath
         );
-        tryLoadingStrings(filepath, renderContext.languages, callback);
+
+        var langs = renderContext && renderContext.languages ? renderContext.languages.slice() : [];
+        tryLoadingStrings(filepath, langs, callback);
       };
     }
   }
@@ -110,7 +112,7 @@ module.exports = function makeViewEngine(engineOptions) {
           engine
             .loadTemplate({templateName: templateName, renderFactory: factory})
             .then(function(fn) {
-              engine.renderTemplate(templateName, context, context.$_renderContext, done);
+              engine.render(fn, context, context.$_renderContext, done);
             })
             .catch(function(err) {
               done(err);

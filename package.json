@@ -1,6 +1,6 @@
 {
   "name": "hapi-lisplate",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "LisplateJS bindings for Hapi render",
   "main": "index.js",
   "directories": {
@@ -18,7 +18,7 @@
   "homepage": "https://github.com/lisplate/hapi-lisplate",
   "peerDependencies": {
     "hapi": "^13.5.0",
-    "lisplate": "~0.5.3",
+    "lisplate": "~0.6.0",
     "vision": "^4.1.0"
   }
 }
